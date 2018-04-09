@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navAnimate"
+        android:icon="@drawable/ic_anim"
+        android:title="Animation" />
+
+    <item
+        android:id="@+id/navSlide"
+        android:icon="@drawable/ic_slide"
+        android:title="Transition" />
+
+    <item
+        android:id="@+id/navBuild"
+        android:icon="@drawable/ic_build"
+        android:title="Builder" />
+
+</menu>

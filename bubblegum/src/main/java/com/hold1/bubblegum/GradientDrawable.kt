@@ -16,7 +16,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
         val defaultEndColor = 0xFFFFB88C.toInt()
     }
 
-    private var currentGradient: Gradient
+    private var currentGradient: Gradient? = null
 
     private var innerColor = Color.TRANSPARENT
     private var outerColor: Int = 0xA9000000.toInt()
@@ -30,24 +30,30 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
     private var loopStartTime: Long = 0
     private val loopDuration = 300
     private var currentIndex = 0
-    private var oneTimeLoop = false
+    var oneTimeLoop = false
+    var fadeInFromBlank = false
 
     constructor(context: Context, gradient: Gradient) : this(context, arrayOf(gradient)) {
 
     }
 
+    constructor(context: Context, gradient: Gradient, fadeIn: Boolean) : this(context, arrayOf(gradient)) {
+        this.fadeInFromBlank = fadeIn
+    }
+
     init {
-        if (colors.size > 0) {
-            currentGradient = colors[0]
-        } else {
-            currentGradient = Gradient(intArrayOf(defaultStartColor, defaultEndColor))
-        }
+        if (!fadeInFromBlank)
+            if (colors.size > 0) {
+                currentGradient = colors[0]
+            } else {
+                currentGradient = Gradient(intArrayOf(defaultStartColor, defaultEndColor))
+            }
 
         paint1 = Paint()
-        paint1!!.color = Color.RED
+        paint1!!.color = Color.WHITE
 
         radialPaint = Paint()
-        radialPaint!!.color = Color.GREEN
+        radialPaint!!.color = Color.WHITE
     }
 
 
@@ -71,7 +77,8 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
 
     override fun onBoundsChange(bounds: Rect?) {
         super.onBoundsChange(bounds)
-        applyGradient(currentGradient, paint1!!)
+        if (currentGradient != null)
+            applyGradient(currentGradient!!, paint1!!)
 
         if (radialPaint != null) {
             radialPaint!!.setShader(RadialGradient(0.25f * bounds!!.width(), 0.8f * bounds!!.height(), bounds!!.width().toFloat(), innerColor, outerColor, Shader.TileMode.CLAMP))
@@ -122,7 +129,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
                 paint1 = paint2
 
             paint2 = Paint()
-            paint2!!.color = Color.BLUE
+            paint2!!.color = Color.TRANSPARENT
 
             loopStartTime = SystemClock.uptimeMillis()
             applyGradient(getNextGradient(), paint2!!)

@@ -1,40 +1,38 @@
 package com.hold1.bubblegumdemo
 
-import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.hold1.bubblegum.Gradient
-import com.hold1.bubblegum.GradientDrawable
-
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        navigation.setOnNavigationItemSelectedListener(bottomNavListener)
+        displayAnimScreen()
+    }
 
-        val g1 = Gradient(intArrayOf(Color.RED, Color.GREEN))
-        val g2 = Gradient(intArrayOf(Color.DKGRAY, Color.BLUE))
-        val g3 = Gradient(intArrayOf(Color.CYAN, Color.MAGENTA))
+    private val bottomNavListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navAnimate -> {
+                displayAnimScreen()
+            }
+            R.id.navSlide -> {
 
-        val animation = GradientDrawable(this, arrayOf(g2,g1,g3))
-        animationView.background = animation
-//        animation.start()
+            }
+            R.id.navBuild -> {
 
-        val animation2 = GradientDrawable(this, g2)
-        testView.background = animation2
-
-        
-
-        fab.setOnClickListener { view ->
-            animation2.setGradient(g3)
+            }
         }
+        false
+    }
+
+    fun displayAnimScreen(){
+        supportFragmentManager.beginTransaction().replace(R.id.appContent, AnimationFragment()).commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
