@@ -1,26 +1,22 @@
 package com.hold1.bubblegum
 
-import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.AnimationDrawable
 import android.os.SystemClock
-import android.util.Log
 
 
 /**
  * Created by Cristian Holdunu on 08/04/2018.
  */
-class GradientDrawable(context: Context, var colors: Array<IntArray>) : AnimationDrawable() {
+class GradientDrawable(context: Context, var colors: Array<Gradient>) : AnimationDrawable() {
 
     companion object {
         val defaultStartColor = 0xFFDE6262.toInt()
         val defaultEndColor = 0xFFFFB88C.toInt()
-        val TAG = GradientDrawable.javaClass.name
     }
 
-    private var startColors: IntArray
-    private var endColors: IntArray? = null
+    private var currentGradient: Gradient
 
     private var innerColor = Color.TRANSPARENT
     private var outerColor: Int = 0xA9000000.toInt()
@@ -34,14 +30,17 @@ class GradientDrawable(context: Context, var colors: Array<IntArray>) : Animatio
     private var loopStartTime: Long = 0
     private val loopDuration = 300
     private var currentIndex = 0
-    private val colorInterpolator = ArgbEvaluator()
+    private var oneTimeLoop = false
 
+    constructor(context: Context, gradient: Gradient) : this(context, arrayOf(gradient)) {
+
+    }
 
     init {
         if (colors.size > 0) {
-            startColors = colors[0]
+            currentGradient = colors[0]
         } else {
-            startColors = intArrayOf(defaultStartColor, defaultEndColor)
+            currentGradient = Gradient(intArrayOf(defaultStartColor, defaultEndColor))
         }
 
         paint1 = Paint()
@@ -52,22 +51,27 @@ class GradientDrawable(context: Context, var colors: Array<IntArray>) : Animatio
     }
 
 
-    fun applyGradient(colors: IntArray, paint: Paint) {
-        if (colors.count() > 0) {
-            val colorOffset = 1.0f / colors.count()
-            val colorPositions = FloatArray(colors.count())
-            for (i in 0 until colors.count() - 1) {
+    private fun applyGradient(gradient: Gradient, paint: Paint) {
+        if (gradient.colors.count() > 0) {
+            val colorOffset = 1.0f / gradient.colors.count()
+            val colorPositions = FloatArray(gradient.colors.count())
+            for (i in 0 until gradient.colors.count() - 1) {
                 colorPositions[i] = i * colorOffset
             }
-            colorPositions[colors.count() - 1] = 1.0f
-            paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, colors, colorPositions, Shader.TileMode.CLAMP))
+            colorPositions[gradient.colors.count() - 1] = 1.0f
+            paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, gradient.colors, colorPositions, Shader.TileMode.CLAMP))
         }
     }
 
+    fun setGradient(gradient: Gradient) {
+        oneTimeLoop = true
+        colors = colors.plus(gradient)
+        start()
+    }
 
     override fun onBoundsChange(bounds: Rect?) {
         super.onBoundsChange(bounds)
-        applyGradient(startColors, paint1!!)
+        applyGradient(currentGradient, paint1!!)
 
         if (radialPaint != null) {
             radialPaint!!.setShader(RadialGradient(0.25f * bounds!!.width(), 0.8f * bounds!!.height(), bounds!!.width().toFloat(), innerColor, outerColor, Shader.TileMode.CLAMP))
@@ -78,15 +82,14 @@ class GradientDrawable(context: Context, var colors: Array<IntArray>) : Animatio
         if (running) {
             val elapsed = SystemClock.uptimeMillis() - loopStartTime
             val progress = elapsed.toFloat() / loopDuration
-            Log.d(TAG, "progress=" + progress)
             if (paint2 != null)
                 paint2!!.alpha = (progress * 255).toInt()
         }
 
         canvas!!.drawRect(0f, 0f, bounds.width().toFloat(), bounds.height().toFloat(), paint1)
         if (paint2 != null)
-            canvas!!.drawRect(0f, 0f, bounds.width().toFloat(), bounds.height().toFloat(), paint2)
-        canvas!!.drawRect(0f, 0f, bounds.width().toFloat(), bounds.height().toFloat(), radialPaint)
+            canvas.drawRect(0f, 0f, bounds.width().toFloat(), bounds.height().toFloat(), paint2)
+        canvas.drawRect(0f, 0f, bounds.width().toFloat(), bounds.height().toFloat(), radialPaint)
     }
 
     override fun start() {
@@ -112,6 +115,8 @@ class GradientDrawable(context: Context, var colors: Array<IntArray>) : Animatio
         val uptimeMillis = SystemClock.uptimeMillis()
         if (uptimeMillis + FRAME_DELAY < loopStartTime + loopDuration) {
             scheduleSelf(this, uptimeMillis + FRAME_DELAY)
+        } else if (oneTimeLoop && currentIndex == colors.size - 1) {
+            running = false
         } else {
             if (paint2 != null)
                 paint1 = paint2
@@ -120,10 +125,13 @@ class GradientDrawable(context: Context, var colors: Array<IntArray>) : Animatio
             paint2!!.color = Color.BLUE
 
             loopStartTime = SystemClock.uptimeMillis()
-            currentIndex = (currentIndex + 1) % colors.size
-            endColors = colors[currentIndex]
-            applyGradient(endColors!!, paint2!!)
+            applyGradient(getNextGradient(), paint2!!)
             scheduleSelf(this, uptimeMillis + FRAME_DELAY)
         }
+    }
+
+    private fun getNextGradient(): Gradient {
+        currentIndex = (currentIndex + 1) % colors.size
+        return colors[currentIndex]
     }
 }

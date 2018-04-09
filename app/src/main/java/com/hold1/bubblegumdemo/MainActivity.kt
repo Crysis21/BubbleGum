@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.hold1.bubblegum.Gradient
 import com.hold1.bubblegum.GradientDrawable
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,18 +19,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val g1 = intArrayOf(Color.RED, Color.GREEN)
-        val g2 = intArrayOf(Color.DKGRAY, Color.BLUE)
-        val g3 = intArrayOf(Color.CYAN, Color.MAGENTA)
+        val g1 = Gradient(intArrayOf(Color.RED, Color.GREEN))
+        val g2 = Gradient(intArrayOf(Color.DKGRAY, Color.BLUE))
+        val g3 = Gradient(intArrayOf(Color.CYAN, Color.MAGENTA))
 
         val animation = GradientDrawable(this, arrayOf(g2,g1,g3))
         animationView.background = animation
-        animation.start()
+//        animation.start()
+
+        val animation2 = GradientDrawable(this, g2)
+        testView.background = animation2
+
         
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            animation2.setGradient(g3)
         }
     }
 
