@@ -19,7 +19,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
     private var currentGradient: Gradient? = null
 
     private var innerColor = Color.TRANSPARENT
-    private var outerColor: Int = 0xA9000000.toInt()
+    private var outerColor: Int = 0xAA000000.toInt()
 
     private var paint1: Paint? = null
     private var paint2: Paint? = null
@@ -28,7 +28,8 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
     private val FRAME_DELAY = (1000 / 60).toLong() // 60 fps
     private var running = false
     private var loopStartTime: Long = 0
-    private val loopDuration = 300
+    var loopDuration = 800
+    var loopInterval = 1000
     private var currentIndex = 0
     var oneTimeLoop = false
     var fadeInFromBlank = false
@@ -81,7 +82,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
             applyGradient(currentGradient!!, paint1!!)
 
         if (radialPaint != null) {
-            radialPaint!!.setShader(RadialGradient(0.25f * bounds!!.width(), 0.8f * bounds!!.height(), bounds!!.width().toFloat(), innerColor, outerColor, Shader.TileMode.CLAMP))
+            radialPaint!!.setShader(RadialGradient(0.25f * bounds!!.width(), 0.8f * bounds!!.height(), Math.max(bounds!!.width().toFloat(), bounds.height().toFloat()), innerColor, outerColor, Shader.TileMode.CLAMP))
         }
     }
 
@@ -124,6 +125,9 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
             scheduleSelf(this, uptimeMillis + FRAME_DELAY)
         } else if (oneTimeLoop && currentIndex == colors.size - 1) {
             running = false
+        } else if (uptimeMillis + FRAME_DELAY < loopStartTime + loopDuration + loopInterval) {
+            //Just wait
+            scheduleSelf(this, uptimeMillis + FRAME_DELAY + loopInterval)
         } else {
             if (paint2 != null)
                 paint1 = paint2

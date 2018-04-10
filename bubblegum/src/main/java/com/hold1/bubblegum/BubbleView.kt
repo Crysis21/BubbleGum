@@ -38,6 +38,9 @@ class BubbleView : View {
         }
         array.recycle()
 
+        if (gradient==null) {
+            gradient = Gradient(intArrayOf(GradientDrawable.defaultStartColor, GradientDrawable.defaultEndColor))
+        }
         val bgDrawable = GradientDrawable(context, gradient!!)
         this.backgroundDraw = bgDrawable
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

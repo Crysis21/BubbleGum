@@ -1,6 +1,7 @@
 package com.hold1.bubblegumdemo
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import com.hold1.bubblegum.Gradient
 import com.hold1.bubblegum.GradientDrawable
 import kotlinx.android.synthetic.main.animate_fragment.*
-import kotlinx.android.synthetic.main.content_main.*
 
 /**
  * Created by Cristian Holdunu on 09/04/2018.
@@ -28,7 +28,21 @@ class AnimationFragment: Fragment() {
 
         val animation = GradientDrawable(context, arrayOf(g2,g1,g3))
 
-        baseView.background = animation
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            baseView.background = animation
+        } else {
+            baseView.setBackgroundDrawable(animation)
+        }
+
         animation.start()
+        
+        startAnimation.setOnClickListener {
+            animation.start()
+        }
+
+        stopAnimation.setOnClickListener {
+            animation.stop()
+        }
     }
 }
