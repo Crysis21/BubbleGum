@@ -26,7 +26,7 @@ class AnimationFragment: Fragment() {
         val g2 = Gradient(intArrayOf(Color.DKGRAY, Color.BLUE))
         val g3 = Gradient(intArrayOf(Color.CYAN, Color.MAGENTA))
 
-        val animation = GradientDrawable(context, arrayOf(g2,g1,g3))
+        val animation = GradientDrawable(arrayOf(g2, g1, g3))
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

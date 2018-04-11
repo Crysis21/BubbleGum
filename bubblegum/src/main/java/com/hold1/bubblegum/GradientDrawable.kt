@@ -1,15 +1,15 @@
 package com.hold1.bubblegum
 
-import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.AnimationDrawable
 import android.os.SystemClock
+import android.util.Log
 
 
 /**
  * Created by Cristian Holdunu on 08/04/2018.
  */
-class GradientDrawable(context: Context, var colors: Array<Gradient>) : AnimationDrawable() {
+class GradientDrawable(var colors: Array<Gradient>) : AnimationDrawable() {
 
     companion object {
         val defaultStartColor = 0xFFDE6262.toInt()
@@ -27,20 +27,13 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
 
     private val FRAME_DELAY = (1000 / 60).toLong() // 60 fps
     private var running = false
-    private var loopStartTime: Long = 0
     var loopDuration = 800
     var loopInterval = 1000
     private var currentIndex = 0
     var oneTimeLoop = false
     var fadeInFromBlank = false
 
-    constructor(context: Context, gradient: Gradient) : this(context, arrayOf(gradient)) {
-
-    }
-
-    constructor(context: Context, gradient: Gradient, fadeIn: Boolean) : this(context, arrayOf(gradient)) {
-        this.fadeInFromBlank = fadeIn
-    }
+    constructor(gradient: Gradient) : this(arrayOf(gradient))
 
     init {
         if (!fadeInFromBlank)
@@ -60,13 +53,8 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
 
     private fun applyGradient(gradient: Gradient, paint: Paint) {
         if (gradient.colors.count() > 0) {
-            val colorOffset = 1.0f / gradient.colors.count()
-            val colorPositions = FloatArray(gradient.colors.count())
-            for (i in 0 until gradient.colors.count() - 1) {
-                colorPositions[i] = i * colorOffset
-            }
-            colorPositions[gradient.colors.count() - 1] = 1.0f
-            paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, gradient.colors, colorPositions, Shader.TileMode.CLAMP))
+            //TODO: Take care of angle
+            paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, gradient.colors, gradient.positions, Shader.TileMode.CLAMP))
         }
     }
 
@@ -86,10 +74,11 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
         }
     }
 
+    var elapsed = 0L
     override fun draw(canvas: Canvas?) {
         if (running) {
-            val elapsed = SystemClock.uptimeMillis() - loopStartTime
-            val progress = elapsed.toFloat() / loopDuration
+            val progress = Math.min(elapsed.toDouble() / loopDuration, 1.0)
+            Log.d("GradientDrawable","progress $progress")
             if (paint2 != null)
                 paint2!!.alpha = (progress * 255).toInt()
         }
@@ -101,6 +90,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
     }
 
     override fun start() {
+        elapsed = Long.MAX_VALUE
         if (colors.size < 2) {
             return
         }
@@ -108,9 +98,8 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
             stop()
         }
         running = true
-        loopStartTime = SystemClock.uptimeMillis()
         invalidateSelf()
-        scheduleSelf(this, loopStartTime + FRAME_DELAY)
+        scheduleSelf(this, SystemClock.uptimeMillis() + FRAME_DELAY)
     }
 
     override fun stop() {
@@ -121,12 +110,14 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
     override fun run() {
         invalidateSelf()
         val uptimeMillis = SystemClock.uptimeMillis()
-        if (uptimeMillis + FRAME_DELAY < loopStartTime + loopDuration) {
+        if (elapsed < loopDuration) {
+            elapsed += FRAME_DELAY
             scheduleSelf(this, uptimeMillis + FRAME_DELAY)
         } else if (oneTimeLoop && currentIndex == colors.size - 1) {
             running = false
-        } else if (uptimeMillis + FRAME_DELAY < loopStartTime + loopDuration + loopInterval) {
+        } else if (elapsed < loopDuration + loopInterval) {
             //Just wait
+            elapsed += loopInterval
             scheduleSelf(this, uptimeMillis + FRAME_DELAY + loopInterval)
         } else {
             if (paint2 != null)
@@ -134,8 +125,7 @@ class GradientDrawable(context: Context, var colors: Array<Gradient>) : Animatio
 
             paint2 = Paint()
             paint2!!.color = Color.TRANSPARENT
-
-            loopStartTime = SystemClock.uptimeMillis()
+            elapsed = 0
             applyGradient(getNextGradient(), paint2!!)
             scheduleSelf(this, uptimeMillis + FRAME_DELAY)
         }

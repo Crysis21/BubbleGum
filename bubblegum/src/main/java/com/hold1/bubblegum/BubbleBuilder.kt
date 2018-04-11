@@ -43,11 +43,11 @@ class BubbleBuilder {
     fun intoView(view: View) {
         val drawable: GradientDrawable?
         if (gradients != null) {
-            drawable = GradientDrawable(view.context, gradients!!)
+            drawable = GradientDrawable(gradients!!)
         } else if (gradient != null) {
-            drawable = GradientDrawable(view.context, gradient!!)
+            drawable = GradientDrawable(gradient!!)
         } else {
-            drawable = GradientDrawable(view.context, Gradient(intArrayOf(startColor, endColor)))
+            drawable = GradientDrawable(Gradient(intArrayOf(startColor, endColor)))
         }
         if (animationDuration!=-1) {
             drawable.loopDuration = animationDuration
