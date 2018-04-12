@@ -52,7 +52,7 @@ class GradientDrawable(var colors: Array<Gradient>) : AnimationDrawable() {
 
 
     private fun applyGradient(gradient: Gradient, paint: Paint) {
-        if (gradient.colors.count() > 0) {
+        if (gradient.colors.count() >= 2) {
             //TODO: Take care of angle
             paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, gradient.colors, gradient.positions, Shader.TileMode.CLAMP))
         }

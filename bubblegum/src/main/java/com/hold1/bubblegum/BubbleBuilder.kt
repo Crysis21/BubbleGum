@@ -8,10 +8,9 @@ import android.view.View
  */
 
 class BubbleBuilder {
-    var gradient: Gradient? = null
     var startColor = -1
     var endColor = -1
-    var gradients: Array<Gradient>? = null
+    var gradients: ArrayList<Gradient>? = null
     var animationDuration = -1
     var animationInterval = -1
 
@@ -26,7 +25,9 @@ class BubbleBuilder {
     }
 
     fun withGradient(gradient: Gradient): BubbleBuilder {
-        this.gradient = gradient
+        if (this.gradients==null)
+            this.gradients = ArrayList()
+        this.gradients?.add(gradient)
         return this
     }
 
@@ -43,9 +44,7 @@ class BubbleBuilder {
     fun intoView(view: View) {
         val drawable: GradientDrawable?
         if (gradients != null) {
-            drawable = GradientDrawable(gradients!!)
-        } else if (gradient != null) {
-            drawable = GradientDrawable(gradient!!)
+            drawable = GradientDrawable(gradients!!.toTypedArray())
         } else {
             drawable = GradientDrawable(Gradient(intArrayOf(startColor, endColor)))
         }

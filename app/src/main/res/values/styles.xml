@@ -9,4 +9,11 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="ColorDialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/an_restrict_dialog_bg</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

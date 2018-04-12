@@ -32,6 +32,9 @@ class SlideFragment : Fragment() {
         collapsingToolbar.setContentScrimColor(context.resources.getColor(R.color.primary_material_dark))
 
         val demoGradients = ArrayList<Gradient>()
+        demoGradients.add(Gradient(intArrayOf(0xFF8E67A2.toInt(),0xff7E7399.toInt())))
+        demoGradients.add(Gradient(intArrayOf(0xFF174783.toInt(),0xff37C9D0.toInt())))
+        demoGradients.add(Gradient(intArrayOf(0xFF9A1A45.toInt(),0xff4DB2E8.toInt())))
         demoGradients.add(Gradient(intArrayOf(Color.RED, Color.CYAN, Color.BLUE)))
         demoGradients.add(Gradient(intArrayOf(Color.BLUE, Color.GREEN)))
         demoGradients.add(Gradient(intArrayOf(Color.YELLOW, Color.DKGRAY)))
