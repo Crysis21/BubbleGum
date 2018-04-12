@@ -56,6 +56,7 @@
             <SeekBar
                 android:id="@+id/gradientAngle"
                 android:layout_width="match_parent"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
                 android:max="360"
                 android:min="0" />

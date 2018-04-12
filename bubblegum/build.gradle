@@ -1,19 +1,30 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+
+group = 'com.hold1'
+project.archivesBaseName = 'bubblegum'
+version = '0.0.1'
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+
 android {
     compileSdkVersion 26
-
-
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        versionName = version
     }
 
     buildTypes {
@@ -34,6 +45,68 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name 'BubbleGum'
+            description 'Gradient animation library, that provides Animated drawable resources and views for enhancing user interfaces.'
+            url 'https://github.com/Crysis21/BubbleGum'
+            inceptionYear '2018'
+
+            packaging 'aar'
+            groupId "com.hold1"
+            artifactId "bubblegum"
+            version '0.0.1'
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection 'https://github.com/Crysis21/BubbleGum.git'
+                url 'https://github.com/Crysis21/BubbleGum'
+
+            }
+            developers {
+                developer {
+                    name 'Cristian Holdunu'
+                }
+            }
+        }
+    }
+}
+
+
+bintray {
+    user = BINTRAY_USER
+    key = BINTRAY_KEY
+    configurations = ['archives']
+
+    pkg {
+        repo = 'Android'
+        name = 'BubbleGum'
+        userOrg = 'crysis21'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+        version {
+            name = version
+            desc = 'BubbleGum ' + version
+            vcsTag = version
+            released = new Date()
+            version {
+                name = '0.0.1'
+                desc = 'Gradient animation library, that provides Animated drawable resources and views for enhancing user interfaces.'
+                vcsTag = '0.0.1'
+                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

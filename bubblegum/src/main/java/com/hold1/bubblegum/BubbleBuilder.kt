@@ -13,9 +13,15 @@ class BubbleBuilder {
     var gradients: ArrayList<Gradient>? = null
     var animationDuration = -1
     var animationInterval = -1
+    var angle = 0
 
     fun withStartColor(color: Int): BubbleBuilder {
         this.startColor = color
+        return this
+    }
+
+    fun withAngle(angle: Int): BubbleBuilder {
+        this.angle = angle
         return this
     }
 
@@ -25,7 +31,7 @@ class BubbleBuilder {
     }
 
     fun withGradient(gradient: Gradient): BubbleBuilder {
-        if (this.gradients==null)
+        if (this.gradients == null)
             this.gradients = ArrayList()
         this.gradients?.add(gradient)
         return this
@@ -46,9 +52,9 @@ class BubbleBuilder {
         if (gradients != null) {
             drawable = GradientDrawable(gradients!!.toTypedArray())
         } else {
-            drawable = GradientDrawable(Gradient(intArrayOf(startColor, endColor)))
+            drawable = GradientDrawable(Gradient(intArrayOf(startColor, endColor), angle))
         }
-        if (animationDuration!=-1) {
+        if (animationDuration != -1) {
             drawable.loopDuration = animationDuration
             drawable.loopInterval = animationInterval
         }

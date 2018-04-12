@@ -4,6 +4,6 @@
         <attr name="bbStartColor" format="color"/>
         <attr name="bbEndColor" format="color"/>
         <attr name="bbGradientColors" format="reference"/>
-        <attr name="bbAngle" format="float"/>
+        <attr name="bbAngle" format="integer"/>
     </declare-styleable>
 </resources>

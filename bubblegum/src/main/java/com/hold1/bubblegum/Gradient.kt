@@ -10,6 +10,8 @@ class Gradient(val colors: IntArray, var positions: FloatArray) {
 
     constructor(colors: IntArray) : this(colors, FloatArray(0))
 
+    constructor(colors: IntArray, angle:Int): this(colors, FloatArray(0), angle)
+
     constructor(colors: IntArray, positions: FloatArray, angle: Int) : this(colors, positions) {
         this.angle = angle
     }

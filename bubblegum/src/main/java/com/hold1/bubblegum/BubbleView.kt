@@ -31,6 +31,7 @@ class BubbleView : View {
         if (array.getColor(R.styleable.BubbleView_bbStartColor, -1) != -1 && array.getColor(R.styleable.BubbleView_bbEndColor, -1) != -1) {
             gradient = Gradient(intArrayOf(array.getColor(R.styleable.BubbleView_bbStartColor, Color.CYAN), array.getColor(R.styleable.BubbleView_bbEndColor, Color.BLUE)))
         }
+        gradient?.angle = array.getInt(R.styleable.BubbleView_bbAngle,0)
         val gradientArrayId = array.getResourceId(R.styleable.BubbleView_bbGradientColors, 0)
         if (gradientArrayId != 0) {
             val gradientColors = resources.getIntArray(gradientArrayId)
