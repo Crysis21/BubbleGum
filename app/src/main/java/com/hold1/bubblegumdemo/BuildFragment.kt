@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import com.hold1.bubblegum.BubbleBuilder
 import com.hold1.bubblegum.Gradient
 import io.reactivex.subjects.PublishSubject
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.color_item.view.*
 class BuildFragment : Fragment(), ColorDialog.ColorListener {
 
     var colorsAdapter: ColorsAdapter? = null
+    var angle = 0
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.build_fragment, container, false)
@@ -29,6 +31,22 @@ class BuildFragment : Fragment(), ColorDialog.ColorListener {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collapsingToolbar.statusBarScrim = null
+
+        gradientAngle.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                angle = progress
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+
         addColor.setOnClickListener {
             val dialog = ColorDialog(this)
             dialog.show((it.context as? AppCompatActivity)!!.supportFragmentManager, "colorPicker")
@@ -48,7 +66,8 @@ class BuildFragment : Fragment(), ColorDialog.ColorListener {
             colorsAdapter!!.colors.map { colorItem -> colorItem.color }.toCollection(colors)
             var positions = ArrayList<Float>()
             colorsAdapter!!.colors.map { colorItem -> colorItem.position }.toCollection(positions)
-            BubbleBuilder().withGradient(Gradient(colors.toIntArray(), positions.toFloatArray()))
+            BubbleBuilder()
+                    .withGradient(Gradient(colors.toIntArray(), positions.toFloatArray(), angle))
                     .intoView(appBar)
         }
     }

@@ -5,17 +5,13 @@ package com.hold1.bubblegum
  */
 class Gradient(val colors: IntArray, var positions: FloatArray) {
 
-    var angle: Float? = null
+    var angle: Int? = null
     var useShadow: Boolean = true
 
     constructor(colors: IntArray) : this(colors, FloatArray(0))
 
-    constructor(colors: IntArray, angle: Float) : this(colors, FloatArray(0)) {
+    constructor(colors: IntArray, positions: FloatArray, angle: Int) : this(colors, positions) {
         this.angle = angle
-    }
-
-    constructor(colors: IntArray, angle: Float, useShadow: Boolean) : this(colors, angle) {
-        this.useShadow = useShadow
     }
 
     init {

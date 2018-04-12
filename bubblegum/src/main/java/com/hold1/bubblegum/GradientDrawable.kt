@@ -53,8 +53,17 @@ class GradientDrawable(var colors: Array<Gradient>) : AnimationDrawable() {
 
     private fun applyGradient(gradient: Gradient, paint: Paint) {
         if (gradient.colors.count() >= 2) {
-            //TODO: Take care of angle
-            paint.setShader(LinearGradient(0f, bounds.height().toFloat(), bounds.right.toFloat(), 0f, gradient.colors, gradient.positions, Shader.TileMode.CLAMP))
+            //TODO: Take care of angle and reverse it so we can start the gradient from left to right
+
+            val angle = - (if (gradient.angle != null) gradient.angle else 35)!!
+            val radius = (bounds.width() + bounds.height()) / 4
+
+            val startX = bounds.centerX() + radius * Math.cos(Math.toRadians(- 180 + angle!!.toDouble()))
+            val startY = bounds.centerY() + radius * Math.sin(Math.toRadians(- 180 + angle!!.toDouble()))
+            val endX = bounds.centerX() + radius * Math.cos(Math.toRadians(angle!!.toDouble()))
+            val endY = bounds.centerY() + radius * Math.sin(Math.toRadians(angle!!.toDouble()))
+
+            paint.setShader(LinearGradient(startX.toFloat(), startY.toFloat(), endX.toFloat(), endY.toFloat(), gradient.colors, gradient.positions, Shader.TileMode.CLAMP))
         }
     }
 
@@ -78,7 +87,7 @@ class GradientDrawable(var colors: Array<Gradient>) : AnimationDrawable() {
     override fun draw(canvas: Canvas?) {
         if (running) {
             val progress = Math.min(elapsed.toDouble() / loopDuration, 1.0)
-            Log.d("GradientDrawable","progress $progress")
+            Log.d("GradientDrawable", "progress $progress")
             if (paint2 != null)
                 paint2!!.alpha = (progress * 255).toInt()
         }

@@ -48,6 +48,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gradient Angle:" />
+
+            <SeekBar
+                android:id="@+id/gradientAngle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="360"
+                android:min="0" />
+
             <Button
                 android:id="@+id/applyGradient"
                 android:layout_width="match_parent"
@@ -58,7 +70,7 @@
                 android:layout_marginTop="14dp"
                 android:background="@drawable/an_restrict_yellow"
                 android:text="Apply Gradient"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
