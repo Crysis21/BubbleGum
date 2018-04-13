@@ -2,9 +2,32 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 
-group = 'com.hold1'
+ext {
+    bintrayRepo = 'Android'
+    bintrayName = 'BubbleGum'
+
+    publishedGroupId = 'com.hold1'
+    pomLibraryName = bintrayName
+
+    libraryDescription = 'Gradient animation library, that provides Animated drawable resources and views for enhancing user interfaces.'
+
+    siteUrl = 'https://github.com/Crysis21/BubbleGum'
+    gitUrl = 'https://github.com/Crysis21/BubbleGum.git'
+
+    libraryVersion = android.defaultConfig.versionName
+
+    developerId = 'crysis21'
+    developerName = 'Cristian Holdunu'
+    developerEmail = 'cristian.holdunu@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+group = publishedGroupId
 project.archivesBaseName = 'bubblegum'
-version = '0.0.1'
+version = '0.0.2'
 
 
 buildscript {
@@ -38,7 +61,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -48,36 +70,48 @@ dependencies {
 
 install {
     repositories.mavenInstaller {
-        pom.project {
-            name 'BubbleGum'
-            description 'Gradient animation library, that provides Animated drawable resources and views for enhancing user interfaces.'
-            url 'https://github.com/Crysis21/BubbleGum'
-            inceptionYear '2018'
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
 
-            packaging 'aar'
-            groupId "com.hold1"
-            artifactId "bubblegum"
-            version '0.0.1'
+                name pomLibraryName
+                description libraryDescription
+                url siteUrl
 
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
                 }
-            }
-            scm {
-                connection 'https://github.com/Crysis21/BubbleGum.git'
-                url 'https://github.com/Crysis21/BubbleGum'
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
 
-            }
-            developers {
-                developer {
-                    name 'Cristian Holdunu'
                 }
             }
         }
     }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 
@@ -87,22 +121,19 @@ bintray {
     configurations = ['archives']
 
     pkg {
-        repo = 'Android'
-        name = 'BubbleGum'
-        userOrg = 'crysis21'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+        repo = bintrayRepo
+        name = bintrayName
+        userOrg = developerId
+        desc = libraryDescription
+        licenses = allLicenses
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        publish = true
+        publicDownloadNumbers = true
         version {
-            name = version
-            desc = 'BubbleGum ' + version
+            desc = libraryDescription
             vcsTag = version
             released = new Date()
-            version {
-                name = '0.0.1'
-                desc = 'Gradient animation library, that provides Animated drawable resources and views for enhancing user interfaces.'
-                vcsTag = '0.0.1'
-                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-            }
         }
     }
 }
