@@ -73,6 +73,12 @@ class GradientDrawable(var colors: Array<Gradient>) : AnimationDrawable() {
         start()
     }
 
+    fun displayGradient(gradient: Gradient) {
+        colors = arrayOf(gradient)
+        currentGradient = gradient
+        invalidateSelf()
+    }
+
     override fun onBoundsChange(bounds: Rect?) {
         super.onBoundsChange(bounds)
         if (currentGradient != null)
