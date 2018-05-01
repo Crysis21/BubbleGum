@@ -59,6 +59,10 @@ class BubbleView : View {
         this.backgroundDraw.setGradient(gradient)
     }
 
+    fun displayGradient(gradient: Gradient) {
+        this.backgroundDraw.displayGradient(gradient)
+    }
+
     fun setGradients(gradients: Array<Gradient>)  {
         this.backgroundDraw.colors = gradients
     }
