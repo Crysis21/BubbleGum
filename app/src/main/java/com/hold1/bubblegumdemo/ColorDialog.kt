@@ -23,12 +23,12 @@ class ColorDialog(var listener: ColorListener?) : DialogFragment() {
         return R.style.ColorDialog
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialog.window!!.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL)
-        return inflater!!.inflate(R.layout.color_dialog, container, false)
+        return inflater.inflate(R.layout.color_dialog, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         colorPickerView.setColorListener { color ->
             colorView.setBackgroundColor(color)
             selectedColor = color

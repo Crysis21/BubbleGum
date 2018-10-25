@@ -20,16 +20,16 @@ import kotlinx.android.synthetic.main.slide_fragment.*
  * Created by Cristian Holdunu on 09/04/2018.
  */
 class SlideFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.slide_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.slide_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         collapsingToolbar.setExpandedTitleColor(Color.WHITE)
         collapsingToolbar.setCollapsedTitleTextColor(Color.WHITE)
-        collapsingToolbar.setContentScrimColor(context.resources.getColor(R.color.primary_material_dark))
+        collapsingToolbar.setContentScrimColor(context!!.resources.getColor(R.color.primary_material_dark))
 
         val demoGradients = ArrayList<Gradient>()
         demoGradients.add(Gradient(intArrayOf(0xFF8E67A2.toInt(),0xff7E7399.toInt())))
@@ -54,7 +54,7 @@ class SlideFragment : Fragment() {
 class GradientsAdapter(var gradients: List<Gradient>) : RecyclerView.Adapter<GradientsAdapter.GradientViewHolder>() {
     val clickSubject = PublishSubject.create<Gradient>()
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GradientViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GradientViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.gradient_item, parent, false)
         return GradientViewHolder(view)
     }
@@ -63,14 +63,14 @@ class GradientsAdapter(var gradients: List<Gradient>) : RecyclerView.Adapter<Gra
         return gradients.size
     }
 
-    override fun onBindViewHolder(holder: GradientViewHolder?, position: Int) {
-        holder?.bind(gradients[position])
-        holder?.itemView?.setOnClickListener {
+    override fun onBindViewHolder(holder: GradientViewHolder, position: Int) {
+        holder.bind(gradients[position])
+        holder.itemView.setOnClickListener {
             clickSubject.onNext(gradients[position])
         }
     }
 
-    class GradientViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    class GradientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(gradient: Gradient) {
             itemView.gradientName.text = "Gradient " + (adapterPosition + 1)

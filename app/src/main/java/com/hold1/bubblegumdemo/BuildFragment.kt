@@ -24,11 +24,11 @@ class BuildFragment : Fragment(), ColorDialog.ColorListener {
     var colorsAdapter: ColorsAdapter? = null
     var angle = 0
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.build_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.build_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collapsingToolbar.statusBarScrim = null
 
@@ -83,8 +83,8 @@ class BuildFragment : Fragment(), ColorDialog.ColorListener {
 class ColorsAdapter(var colors: MutableList<ColorItem>) : RecyclerView.Adapter<ColorsAdapter.ColorViewHolder>() {
     val clickSubject = PublishSubject.create<ColorItem>()
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ColorViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.color_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.color_item, parent, false)
         return ColorViewHolder(view)
     }
 
@@ -92,14 +92,14 @@ class ColorsAdapter(var colors: MutableList<ColorItem>) : RecyclerView.Adapter<C
         return colors.size
     }
 
-    override fun onBindViewHolder(holder: ColorViewHolder?, position: Int) {
-        holder?.bind(colors[position])
-        holder?.itemView?.setOnClickListener {
+    override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
+        holder.bind(colors[position])
+        holder.itemView.setOnClickListener {
             clickSubject.onNext(colors[position])
         }
     }
 
-    class ColorViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    class ColorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(colorItem: ColorItem) {
             itemView.colorView.setBackgroundColor(colorItem.color)

@@ -15,11 +15,11 @@ import kotlinx.android.synthetic.main.animate_fragment.*
  * Created by Cristian Holdunu on 09/04/2018.
  */
 class AnimationFragment: Fragment() {
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.animate_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.animate_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val g1 = Gradient(intArrayOf(Color.RED, Color.GREEN))

@@ -37,19 +37,19 @@ class MainActivity : AppCompatActivity() {
     fun displayAnimScreen() {
         if (animScreen == null)
             animScreen = AnimationFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.appContent, animScreen).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.appContent, animScreen!!).commit()
     }
 
     fun displaySlideScreen(){
         if (slideScreen==null)
             slideScreen = SlideFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.appContent, slideScreen).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.appContent, slideScreen!!).commit()
     }
 
     fun displayBuildScreen(){
         if (buildFragment==null)
             buildFragment = BuildFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.appContent, buildFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.appContent, buildFragment!!).commit()
     }
 
 }
